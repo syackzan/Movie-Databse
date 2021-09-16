@@ -41,7 +41,7 @@ app.post('/api/new-movies', ({ body }, res) => {
 
 // Read all movies
 app.get('/api/movies', (req, res) => {
-  const sql = `SELECT id, movie_name AS title FROM movies`;
+  const sql = `SELECT * FROM movies`;
   
   db.query(sql, (err, rows) => {
     if (err) {
@@ -56,12 +56,58 @@ app.get('/api/movies', (req, res) => {
 });
 
 // TODO: Delete a movie
-
+app.delete('/api/movies/:id', (req, res) => {
+  const sql = `DELETE FROM movies WHERE id = ?;`;
+  const returnedId = req.params.id
+  console.log(returnedId);
+  
+  db.query(sql, returnedId, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+       return;
+    }
+    res.json({
+      message: 'successfully Updated',
+      data: rows
+    });
+  });
+});
 
 // TODO: Read list of all reviews and associated movie name using LEFT JOIN
+app.get('/api/movies_reviews', (req, res) => {
+  const sql = `SELECT movies.title AS Title, reviews.review AS Reviews FROM reviews JOIN movies ON reviews.movies_id = movies.id;`;
+  
+  db.query(sql, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+       return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
 
 // TODO: Update review name
-
+app.put('/api/reviews', (req, res) => {
+  const sql = `UPDATE reviews SET review = ? WHERE id = ?`;
+  const {review, id} = req.body;
+  let array = [review, id];
+  console.log(review);
+  console.log(id);
+  
+  db.query(sql, array, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+       return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
 
 // Default response for any other request (Not Found)
 app.use((req, res) => {
