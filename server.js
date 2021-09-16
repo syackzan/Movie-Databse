@@ -16,15 +16,27 @@ const db = mysql.createConnection(
     // MySQL username,
     user: 'root',
     // TODO: Add MySQL password here
-    password: '',
+    password: 'password',
     database: 'movies_db'
   },
   console.log(`Connected to the movies_db database.`)
 );
 
 // Create a movie
-app.post('/api/new-movie', ({ body }, res) => {
-
+app.post('/api/new-movies', ({ body }, res) => {
+  const sql = `INSERT INTO movies (title) VALUES (?)`;
+  const newMovie = body;
+  
+  db.query(sql, newMovie, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+       return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
 });
 
 // Read all movies
