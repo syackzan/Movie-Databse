@@ -23,10 +23,11 @@ const db = mysql.createConnection(
 );
 
 // Create a movie
-app.post('/api/new-movies', ({ body }, res) => {
+app.post('/api/new-movies', (req, res) => {
+  const newMovie = req.body.title;
+  console.log(newMovie);
   const sql = `INSERT INTO movies (title) VALUES (?)`;
-  const newMovie = body;
-  
+
   db.query(sql, newMovie, (err, rows) => {
     if (err) {
       res.status(500).json({ error: err.message });
