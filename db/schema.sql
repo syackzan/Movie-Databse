@@ -9,7 +9,7 @@ CREATE TABLE movies (
 );
 
 CREATE TABLE reviews (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     review TEXT NOT NULL,
     movies_id INT,
     FOREIGN KEY (movies_id)
